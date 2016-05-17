@@ -1,0 +1,51 @@
+#!/bin/bash
+
+cat /etc/iptables.d/COMMENT
+
+for TABLE in /etc/iptables.d/* ; do
+	if [ -d $TABLE ] ; then
+		TABLE=`basename $TABLE`
+		echo
+		cat /etc/iptables.d/$TABLE/_BEGIN
+		for CHAIN in /etc/iptables.d/$TABLE/* ; do
+			if [ -d $CHAIN ] ; then
+				CHAIN=`basename $CHAIN`
+				# Skip special chains that start with underscore (such as _GLOBAL)
+				if [ ${CHAIN:0:1} = '_' ] ; then 
+					continue
+				fi
+				if ! grep -q "^:$CHAIN " /etc/iptables.d/$TABLE/_BEGIN ; then
+					echo ":$CHAIN - [0:0]"
+				fi
+			fi
+		done
+		echo
+		RULE_COUNTER=0
+		for CHAIN in /etc/iptables.d/$TABLE/* ; do
+			CHAIN=`basename $CHAIN`
+			# Skip special chains that start with underscore (such as _GLOBAL)
+			if [ ${CHAIN:0:1} = '_' ] ; then 
+				continue
+			fi
+			echo
+			echo "#####################################################################################"
+			printf '#%84s\n' "$TABLE.$CHAIN"
+			echo
+			for RULE in /etc/iptables.d/$TABLE/$CHAIN/* ; do
+				#BASERULE=$TABLE/$CHAIN/`basename $RULE`
+				RULE_COUNTER=$(( $RULE_COUNTER + 1 ))
+				if [ -f $RULE ] ; then
+					export RULE
+					export CHAIN
+					export RULE_COUNTER
+					cat $RULE | /usr/local/bin/fwtree-parser
+					echo
+				fi
+			done
+			echo
+			echo
+		done
+		echo COMMIT
+	fi
+done
+

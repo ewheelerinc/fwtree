@@ -1,0 +1,7 @@
+# Its nice to send packets back, but lets not respond with chatter to a flood.  
+# No more than 10pps (600/min).
+-m limit --limit 600/min -p tcp -j REJECT --reject-with tcp-reset 
+-m limit --limit 600/min -p udp -j REJECT --reject-with icmp-port-unreachable 
+-m limit --limit 600/min -p icmp -j REJECT --reject-with icmp-admin-prohibited
+-m limit --limit 15/min -j LOG --log-prefix "DROPPED: " --log-level 7 
+-j DROP

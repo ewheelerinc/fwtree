@@ -1,0 +1,42 @@
+#!/usr/bin/perl -ln
+
+my $line = $_;
+chomp $line;
+
+my $var;
+my $exec;
+if ($line =~ /(\w+)=`([^`]+)`/) {
+	$var = $1;
+	$exec = `$2`;
+}
+
+#$line =~ s/(\w+)=`([^`]+)`/$exec{$1}/g
+
+if ($line =~ /^\s*[^#]/) {
+	if (defined $exec) {
+		for my $replacement (split /\s+/s, $exec) {
+			my $l = $line;
+			$l =~ s/(\w+)=`([^`]+)`/$replacement/;
+			$l =~ s/\$$var/$replacement/g;
+			
+			
+			if ($l =~ /AUTOLOG=\((\w+),([^,]+)(?:,([^)]+))?\)/) {
+				$auto_counter++;
+				my $chain = "AUTOLOG_$ENV{RULE_COUNTER}_$auto_counter";
+				print "\n:$chain - [0:0]";
+				print "-A $chain -j LOG --log-prefix \"$replacement: \" --log-level 7 $3";
+				print "-A $chain -j $1";
+				$l =~ s/AUTOLOG=\([^)]+\)/$chain/;
+			}
+			
+			print "-A $ENV{CHAIN} $l -m comment --comment \"$ENV{RULE}:$.\"";
+		}
+	}
+	else {
+		print "-A $ENV{CHAIN} $line -m comment --comment \"$ENV{RULE}:$.\"";
+	}
+}
+else {
+	print $line;
+}
+

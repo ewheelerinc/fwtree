@@ -1,0 +1,10 @@
+# Minimize latency for small packets and connection streams
+-p tcp --tcp-flags SYN SYN -j TOS --set-tos 0x10
+-p tcp --tcp-flags ACK ACK -j TOS --set-tos 0x10
+-p tcp --tcp-flags FIN FIN -j TOS --set-tos 0x10
+-p tcp --tcp-flags RST RST -j TOS --set-tos 0x10
+-m connbytes --connbytes-dir both --connbytes-mode bytes --connbytes 0:9000 -j TOS --set-tos 0x10
+
+# Maximize throughput for bulk transfer
+-m connbytes --connbytes-dir both --connbytes-mode bytes --connbytes 1048576: -j TOS --set-tos 0x08
+

@@ -1,0 +1,66 @@
+#!/bin/bash
+
+#STATE_DIR='/var/lib/iptables.d'
+STATE_DIR='/etc/ipset.d'
+mkdir -p $STATE_DIR
+
+is_current () {
+	FILE=$1
+	if [ -f "$FILE" ] &&
+	   [ $(ls -l --time-style +%s "$FILE" | cut -d' ' -f6) -gt $(( `date +%s` - 7200 )) ] ; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+BLACKLIST="$STATE_DIR/blacklist-dshield-block"
+if ! is_current "$BLACKLIST" ; then
+	wget -q -O- http://feeds.dshield.org/block.txt |\
+		perl -lne 'print "$1/$2" if /^(\d\S+)\s+\S+\s+(\d+)/' |\
+		perl -lne 'print "$1 timeout 86400" if /^(\S+)/' > "$BLACKLIST"
+fi
+
+BLACKLIST="$STATE_DIR/blacklist-spamhaus-drop"
+if ! is_current "$BLACKLIST" ; then
+	wget -q -O-  http://www.spamhaus.org/drop/drop.txt |\
+		perl -lne 'print "$1 timeout 86400" if /^(\S+)/' > "$BLACKLIST"
+fi
+
+BLACKLIST="$STATE_DIR/blacklist-spamhaus-edrop"
+if ! is_current "$BLACKLIST" ; then
+	wget -q -O-  http://www.spamhaus.org/drop/edrop.txt |\
+		perl -lne 'print "$1 timeout 86400" if /^(\S+)/' > "$BLACKLIST"
+fi
+
+BLACKLIST="$STATE_DIR/blacklist-ciarmy-badguys"
+if ! is_current "$BLACKLIST" ; then
+	wget -q -O-  http://www.ciarmy.com/list/ci-badguys.txt |\
+		perl -lne 'print "$1 timeout 86400" if /^(\S+)/' > "$BLACKLIST"
+fi
+
+BLACKLIST="$STATE_DIR/blacklist-rulez-blist"
+if ! is_current "$BLACKLIST" ; then
+	wget -q -O-  http://danger.rulez.sk/projects/bruteforceblocker/blist.php |\
+		perl -lne 'print "$1 timeout 86400" if /^(\S+)/' > "$BLACKLIST"
+fi
+
+BLACKLIST="$STATE_DIR/blacklist-openbl-base"
+if ! is_current "$BLACKLIST" ; then
+	wget -q -O- http://www.openbl.org/lists/base.txt.gz | zcat |\
+		perl -lne 'print "$1 timeout 86400" if /^(\S+)/' > "$BLACKLIST"
+fi
+
+BLACKLIST="$STATE_DIR/blacklist-autoshun-shunlist"
+if ! is_current "$BLACKLIST" ; then
+	wget -q -O-  http://www.autoshun.org/files/shunlist.csv |\
+		cut -d, -f1 | grep -v Shunlist |\
+		perl -lne 'print "$1 timeout 86400" if /^(\S+)/' > "$BLACKLIST"
+fi
+
+
+# www.projecthoneypot.org/list_of_ips.php?t=h&rss=1 
+# www.projecthoneypot.org/list_of_ips.php?t=p&rss=1 
+# www.projecthoneypot.org/list_of_ips.php?t=d&rss=1 
+
+

@@ -1,0 +1,6 @@
+# Allow spurious packets with FIN or RST set.  These show up when
+# a legitimate connection had existed, but timed out.  Tracking
+# was flushed, so no match above, but the remote end wishes to
+# reply with FIN or RST.  Accept these and stop filling the logs.
+-p tcp --tcp-flags FIN FIN -j ACCEPT
+-p tcp --tcp-flags RST RST -j ACCEPT

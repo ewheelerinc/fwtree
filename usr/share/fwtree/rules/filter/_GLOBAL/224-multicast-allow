@@ -1,0 +1,4 @@
+-p udp -s 224.0.0.0/4 -j ACCEPT
+-p udp -d 224.0.0.0/4 -j ACCEPT
+-m pkttype --pkt-type multicast -j ACCEPT
+-p igmp -j ACCEPT

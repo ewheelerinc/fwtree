@@ -1,0 +1,16 @@
+# Firewall configuration written by eWheeler Inc dba Global Linux Security
+# The previous line is not just vanity, it enables vim syntax highlight, too ;)
+# 
+# Add this to syslog: kern.=debug     -/var/log/iptables
+
+# # Do not modify this file directly.   Create rules in /etc/iptables.d/.
+# #
+# # To regenerate firewall rules, perform the following:
+# #  /usr/local/bin/fwtree > /etc/sysconfig/iptables
+# #
+# # Apply the rules:
+# #  /usr/local/bin/fwtree | iptables-restore
+# #
+# # or
+# #  /etc/init.d/iptables restart
+#

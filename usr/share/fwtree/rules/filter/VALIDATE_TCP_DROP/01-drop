@@ -1,0 +1,2 @@
+-m limit --limit 15/min -j LOG --log-prefix "VALIDATE_TCP_DROP: " --log-level 7 
+-j DROPLOG

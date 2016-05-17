@@ -1,0 +1,2 @@
+-m limit --limit 15/min -j LOG --log-prefix "THROTTLED_DROP: " --log-level 7 
+-j DROPLOG

@@ -1,0 +1,3 @@
+-m limit --limit 15/min -j LOG --log-prefix "OVERLIMIT_DROP: " --log-level 7 
+-j DROP
+

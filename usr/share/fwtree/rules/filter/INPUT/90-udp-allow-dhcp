@@ -1,0 +1,5 @@
+# Allow DHCP
+-s 255.255.255.255 -p udp --dport bootps -j ACCEPT
+-s 255.255.255.255 -p udp --dport bootpc -j ACCEPT
+-d 255.255.255.255 -p udp --dport bootps -j ACCEPT
+-d 255.255.255.255 -p udp --dport bootpc -j ACCEPT

@@ -1,0 +1,14 @@
+[Unit]
+Description=Tree-driven firewall
+
+After=network-online.target
+Requires=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=oneshot
+
+ExecStartPre=/usr/bin/sh -c 'ipset-helper -c'
+ExecStart=/usr/bin/sh -c 'fwtree | iptables-restore'

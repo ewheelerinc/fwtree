@@ -1,0 +1,1 @@
+-i lo -o lo -j ACCEPT

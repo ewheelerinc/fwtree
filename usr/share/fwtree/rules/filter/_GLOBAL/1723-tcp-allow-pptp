@@ -1,0 +1,3 @@
+# Needs kernel module:nf_conntrack_pptp module:nf_nat_pptp
+-p tcp --dport 1723 -m conntrack --ctstate NEW -j ACCEPT
+-p 47 -m conntrack --ctstate NEW -j ACCEPT

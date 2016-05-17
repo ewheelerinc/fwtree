@@ -1,0 +1,2 @@
+# Never accept 127.0.0.0/8 destinations on anything but 'lo'
+! -i lo -d 127.0.0.0/8 -j INPUT_DROP

@@ -1,0 +1,2 @@
+# Allow established connections early (as fast as possible)
+-m conntrack --ctstate ESTABLISHED -j ACCEPT 

@@ -1,0 +1,1 @@
+-p udp --dport 123 -m conntrack --ctstate NEW -j ACCEPT

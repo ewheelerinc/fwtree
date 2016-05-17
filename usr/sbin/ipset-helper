@@ -1,0 +1,80 @@
+#!/bin/bash
+# yum install bind-utils ipset aggregate
+# see countryipblocks.net for cidr addresses
+
+# This script is intented to be installed just before iptables is brought up.
+# Running it with a "-c" at the bottom of /etc/sysconfig/iptables-config is a good hook for this on CentOS.
+# Secondarily, it needs to be added to cron and ran as frequently as you like.
+# Cron ip sets do name resolution so that ip set maps can be used in the firewall and dynamically updated if a hostname for that set changes.
+
+# Rules are additive, not transactional. If you mean to delete an entry from an IP set you will need to clear it manually.
+
+# The "-c" option only creates the tables defined in /etc/ipset.d/cidr since these are not dynamic.
+# The ip set names in /etc/ipset.d/cidr/* are intended to be one shot.
+#     They are added at creation time but never updated.
+#     This is useful for country-based maps that change infrequently.
+if [ "$1" = "-c" ] ; then
+	CREATEONLY=true
+	for SETPATH in /etc/ipset.d/cidr/* ; do
+		if ! [ -e "$SETPATH" ] ; then continue; fi
+		SETNAME=`basename "$SETPATH"`
+		ipset destroy "$SETNAME" 2>/dev/null
+		(
+			echo create $SETNAME hash:net family inet hashsize 16384 maxelem 65536
+			aggregate -q < "$SETPATH" | perl -pe "next unless /^\\d+\\.\\d+\\.\\d+\\.\\d+/; print 'add $SETNAME '"
+		) | ipset restore
+	done
+else
+	CREATEONLY=false
+	/usr/local/bin/fw-update-blacklists
+fi
+
+# Reads from STDIN
+add_hosts () {
+	SETNAME=$1
+	CACHE_DIR="/etc/ipset.d/cache/$SETNAME"
+	mkdir -p "$CACHE_DIR"
+        perl -lne 's/[#;].*//; 
+                ($host,@args) = split /\s+/;
+                $args = join(" ", @args);
+                if ($host =~ m!^[0-9./]+$!) {
+                        print "-exist add '"$SETNAME"' $host $args"
+                } elsif ($host) {
+                        @ips = split /\s+/, `host -tA "$host" | grep "has address" | cut -d" " -f4`;
+			next unless @ips;
+			open my $CACHE, ">>", "'"$CACHE_DIR"'/$host";
+                        foreach $ip (@ips) {
+                                print "-exist add '"$SETNAME"' $ip $args";
+				print $CACHE $ip;
+                        }
+                }
+        ' | ipset restore
+	for a in $CACHE_DIR/* ; do sort -V -u "$a" -o "$a" ; done 2>/dev/null
+}
+
+# Uses hostname resolution to populate ip sets in /etc/ipset.d/*
+# Subdirectories are ignored.
+# Name resolution and additions are skipped if "-c" was passed above (CREATEONLY=true)
+for SETPATH in /etc/ipset.d/* ; do
+	if [ -d "$SETPATH" ] ; then continue ; fi
+	SETNAME=`basename "$SETPATH"`
+	ipset create "$SETNAME" hash:net timeout 0 2>/dev/null
+	if [ $CREATEONLY = false ] ; then
+		cat /etc/ipset.d/cache/$SETNAME/* 2>/dev/null | add_hosts "$SETNAME"
+		cat "$SETPATH" | add_hosts "$SETNAME"
+	fi
+done
+
+# Runs every script in exec.d and creates an IP set with the same name as the script name.
+# All hostnames and IP addresses written to STDOUT are added to that set.
+for SETPATH in /etc/ipset.d/exec.d/* ; do
+	if [ -d "$SETPATH" ] ; then continue ; fi
+	if ! [ -x "$SETPATH" ] ; then continue ; fi
+	SETNAME=`basename "$SETPATH"`
+	ipset create "$SETNAME" hash:net 2>/dev/null
+	if [ $CREATEONLY = false ] ; then
+		cat /etc/ipset.d/cache/$SETNAME/* 2>/dev/null | add_hosts "$SETNAME"
+		"$SETPATH" | add_hosts "$SETNAME"
+	fi
+done
+

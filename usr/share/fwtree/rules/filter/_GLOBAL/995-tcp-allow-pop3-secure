@@ -1,0 +1,1 @@
+-p tcp --dport 995 -m conntrack --ctstate NEW -j ACCEPT

@@ -1,0 +1,2 @@
+-m set --match-set blacklist=`cd /etc/ipset.d; ls blacklist-*` src -j AUTOLOG=(DROPLOG,"$blacklist") 
+

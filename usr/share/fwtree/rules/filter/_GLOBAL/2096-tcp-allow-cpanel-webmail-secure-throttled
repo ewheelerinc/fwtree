@@ -1,0 +1,2 @@
+-p tcp --dport 2096 -m conntrack --ctstate NEW -m connlimit --connlimit-above 12 -j OVERLIMIT_DROP
+-p tcp --dport 2096 -m conntrack --ctstate NEW -j ACCEPT

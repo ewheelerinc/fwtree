@@ -1,0 +1,6 @@
+-m limit --limit 15/min -j LOG -m owner --uid-owner USER=`cut -f1 -d: /etc/passwd` --log-prefix "DROP: $USER: " --log-level 7 
+-m limit --limit 15/min -j DROPLOG -m owner --uid-owner USER=`cut -f1 -d: /etc/passwd` 
+
+-m limit --limit 15/min -j LOG --log-prefix "OUTPUT_DROP: unknown user: " --log-level 7 
+-j DROPLOG
+

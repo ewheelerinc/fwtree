@@ -1,0 +1,3 @@
+-p tcp --dport 80 -m conntrack --ctstate NEW -m connlimit --connlimit-above 32 -j OVERLIMIT_DROP
+-p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+

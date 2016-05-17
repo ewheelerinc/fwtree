@@ -1,0 +1,13 @@
+# TCP flag validation
+-m conntrack --ctstate INVALID             -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ACK,FIN FIN             -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ACK,PSH PSH             -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ACK,URG URG             -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags FIN,RST FIN,RST         -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags SYN,FIN SYN,FIN         -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags SYN,RST SYN,RST         -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ALL ALL                 -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ALL NONE                -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ALL FIN,PSH,URG         -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ALL SYN,FIN,PSH,URG     -j VALIDATE_TCP_DROP
+-p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j VALIDATE_TCP_DROP

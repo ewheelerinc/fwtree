@@ -1,0 +1,2 @@
+-i lo -m conntrack --ctstate NEW -j ACCEPT
+-i lo -j ACCEPT

@@ -1,0 +1,3 @@
+# Delete this file to revert to default deny for the OUTPUT chain
+# serving connections initiated by this host.
+-j OUTPUT_LOG_ALLOW
