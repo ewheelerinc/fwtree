@@ -1,0 +1,39 @@
+#!/bin/bash
+
+DIST=$1
+
+if [ -z "$DIST" ]; then
+	echo "Usage: `basename $0` [DIST]"
+	echo "  Current supported distributions: el7"
+	exit 1
+fi
+
+if [ "$DIST" != 'el7' ]; then
+	echo "Currently only el7 is supported."
+	exit 1
+fi
+
+FWTREE_PATH='/usr/src/fwtree-git/'
+TAR_PATH="/$FWTREE_PATH/tmp/"
+
+mkdir $TAR_PATH
+cp -a $FWTREE_PATH/rootfs/* $TAR_PATH/
+
+SUBRELEASE=".$DIST"
+VERSION=$(cat /$FWTREE_PATH/.version)
+$FWTREE_PATH/buildscripts/mkrelease
+PKGRELEASE=$(cat $FWTREE_PATH/.release)$SUBRELEASE
+ARCH='noarch'
+TARBALL="fwtree-$VERSION-${PKGRELEASE}.${ARCH}.tar"
+
+export VERSION PKGRELEASE DIST ARCH SCRIPTS TARBALL
+
+$FWTREE_PATH/buildscripts/mkspec > $FWTREE_PATH/fwtree.spec
+
+tar -C $TAR_PATH -cf $TARBALL ./
+rm -rf $TAR_PATH
+
+rpmbuild -bb $FWTREE_PATH/fwtree.spec
+rm -f $FWTREE_PATH/$TARBALL
+
+exit 0

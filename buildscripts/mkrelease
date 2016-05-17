@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -f .release ]
+then
+	echo 1 > .release
+else
+	expr 0`cat .release` + 1 > .release
+fi
