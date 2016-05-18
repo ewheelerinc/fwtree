@@ -1,9 +1,9 @@
 # Log the user
--m limit --limit 15/min -j LOG -m owner --uid-owner USER=`cut -f1 -d: /etc/passwd` --log-prefix "ALLOW: $USER: " --log-level 7 
+-m limit --limit 15/min -j LOG -m owner --uid-owner USER=`cut -f1 -d: /etc/passwd` --log-prefix "ALLOW: $USER: " --log-level 7 --log-uid
 # Accept if the user is known
 -m limit --limit 15/min -m owner --uid-owner USER=`cut -f1 -d: /etc/passwd` -j ACCEPT
 
 # Log if unknown, then accept.
--m limit --limit 15/min -j LOG --log-prefix "ALLOW: unknown user: " --log-level 7 
+-m limit --limit 15/min -j LOG --log-prefix "ALLOW: unknown user: " --log-level 7 --log-uid
 -j ACCEPT
 

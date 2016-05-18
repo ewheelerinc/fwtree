@@ -1,7 +1,7 @@
 Name: fwtree
 Summary: Tree-driven firewall
 Version: 1.0.1
-Release: 8.el7
+Release: 9.el7
 BuildArch: noarch
 Group: Application
 License: Restricted
@@ -15,14 +15,14 @@ AutoReqProv: no
 %description
 
 %build
-cp /usr/src/fwtree-git/fwtree-1.0.1-8.el7.noarch.tar %{_builddir}/fwtree-1.0.1-8.el7.noarch.tar
+cp /usr/src/fwtree-git/fwtree-1.0.1-9.el7.noarch.tar %{_builddir}/fwtree-1.0.1-9.el7.noarch.tar
 
 %install
 mkdir -p $RPM_BUILD_ROOT/
-mv fwtree-1.0.1-8.el7.noarch.tar $RPM_BUILD_ROOT/fwtree-1.0.1-8.el7.noarch.tar
+mv fwtree-1.0.1-9.el7.noarch.tar $RPM_BUILD_ROOT/fwtree-1.0.1-9.el7.noarch.tar
 cd $RPM_BUILD_ROOT/
-tar -xf $RPM_BUILD_ROOT/fwtree-1.0.1-8.el7.noarch.tar
-rm $RPM_BUILD_ROOT/fwtree-1.0.1-8.el7.noarch.tar
+tar -xf $RPM_BUILD_ROOT/fwtree-1.0.1-9.el7.noarch.tar
+rm $RPM_BUILD_ROOT/fwtree-1.0.1-9.el7.noarch.tar
 
 %clean
 rm -fr $RPM_BUILD_ROOT
@@ -30,7 +30,9 @@ rm -fr $RPM_BUILD_ROOT
 %post
 [ "$(ls -A /etc/iptables.d/)" ] && exit
 
-echo "Warning: SSH is the only service allowed by default."
+echo
+echo "NOTICE: SSH (22/tcp) is the only inbound service enabled by default."
+echo
 
 mkdir -p /etc/iptables.d/{filter,nat,mangle}/{INPUT,OUTPUT}
 mkdir -p /etc/iptables.d/{filter,mangle}/FORWARD
@@ -88,6 +90,8 @@ ln -s /etc/iptables.d/mangle/_GLOBAL/10-tos-default /etc/iptables.d/mangle/PRERO
 ln -s /etc/iptables.d/mangle/_GLOBAL/10-tos-default /etc/iptables.d/mangle/POSTROUTING
 ln -s /etc/iptables.d/mangle/_GLOBAL/10-tos-default /etc/iptables.d/mangle/OUTPUT
 ln -s /etc/iptables.d/mangle/_GLOBAL/10-tos-default /etc/iptables.d/mangle/FORWARD
+
+/usr/sbin/fwtree-update-blacklists
 
 %files
 %defattr (-, root, root)
