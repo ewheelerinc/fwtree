@@ -5,12 +5,16 @@
 
 # # Do not modify this file directly.   Create rules in /etc/iptables.d/.
 # #
-# # To regenerate firewall rules, perform the following:
-# #  /usr/local/bin/fwtree > /etc/sysconfig/iptables
+# # To regenerate firewall rules, perform the following, depending on distribution:
+# # CentOS 6:
+# #  fwtree > /etc/sysconfig/iptables
 # #
-# # Apply the rules:
-# #  /usr/local/bin/fwtree | iptables-restore
-# #
-# # or
+# # and then
 # #  /etc/init.d/iptables restart
+# #
+# # CentOS 7:
+# #  systemctl restart fwtree.service
+# #
+# # Other Distributions:
+# #  fwtree | iptables-restore
 #

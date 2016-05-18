@@ -38,7 +38,7 @@ for TABLE in /etc/iptables.d/* ; do
 					export RULE
 					export CHAIN
 					export RULE_COUNTER
-					cat $RULE | /usr/local/bin/fwtree-parser
+					cat $RULE | fwtree-parser
 					echo
 				fi
 			done

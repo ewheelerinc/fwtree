@@ -26,7 +26,7 @@ if [ "$1" = "-c" ] ; then
 	done
 else
 	CREATEONLY=false
-	/usr/local/bin/fw-update-blacklists
+	fwtree-update-blacklists
 fi
 
 # Reads from STDIN
