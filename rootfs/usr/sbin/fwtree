@@ -31,14 +31,14 @@ for TABLE in /etc/iptables.d/* ; do
 			echo "#####################################################################################"
 			printf '#%84s\n' "$TABLE.$CHAIN"
 			echo
-			for RULE in /etc/iptables.d/$TABLE/$CHAIN/* ; do
+			for RULE in /etc/iptables.d/$TABLE/$CHAIN/*.rule ; do
 				#BASERULE=$TABLE/$CHAIN/`basename $RULE`
 				RULE_COUNTER=$(( $RULE_COUNTER + 1 ))
 				if [ -f $RULE ] ; then
 					export RULE
 					export CHAIN
 					export RULE_COUNTER
-					cat $RULE | fwtree-parser
+					fwtree-parser < "$RULE"
 					echo
 				fi
 			done

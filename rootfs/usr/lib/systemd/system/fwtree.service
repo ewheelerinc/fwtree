@@ -16,4 +16,4 @@ RemainAfterExit=yes
 ExecStartPre=/usr/bin/sh -c 'ipset-helper -c'
 ExecStart=/usr/bin/sh -c 'fwtree | iptables-restore'
 
-ExecStop=/usr/bin/sh -c 'iptables-restore < /usr/share/fwtree/fwtree-stop.rules'
+ExecStop=/usr/bin/sh -c 'iptables-restore < /usr/share/fwtree/fwtree-stop.ruleset'
