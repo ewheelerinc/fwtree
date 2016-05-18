@@ -1,14 +1,19 @@
 [Unit]
 Description=Tree-driven firewall
 
-After=network-online.target
-Requires=network-online.target
+Before=network.target
+Before=libvirtd.service
+
+Conflicts=iptables.service ip6tables.service ebtables.service firewalld.service
 
 [Install]
 WantedBy=multi-user.target
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 
 ExecStartPre=/usr/bin/sh -c 'ipset-helper -c'
 ExecStart=/usr/bin/sh -c 'fwtree | iptables-restore'
+
+ExecStop=/usr/bin/sh -c 'iptables-restore < /usr/share/fwtree/fwtree-stop.rules'
