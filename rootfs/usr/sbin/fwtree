@@ -1,27 +1,27 @@
 #!/bin/bash
 
-cat /etc/iptables.d/COMMENT
+cat /etc/fwtree.d/COMMENT
 
-for TABLE in /etc/iptables.d/* ; do
+for TABLE in /etc/fwtree.d/* ; do
 	if [ -d $TABLE ] ; then
 		TABLE=`basename $TABLE`
 		echo
-		cat /etc/iptables.d/$TABLE/_BEGIN
-		for CHAIN in /etc/iptables.d/$TABLE/* ; do
+		cat /etc/fwtree.d/$TABLE/_BEGIN
+		for CHAIN in /etc/fwtree.d/$TABLE/* ; do
 			if [ -d $CHAIN ] ; then
 				CHAIN=`basename $CHAIN`
 				# Skip special chains that start with underscore (such as _GLOBAL)
 				if [ ${CHAIN:0:1} = '_' ] ; then 
 					continue
 				fi
-				if ! grep -q "^:$CHAIN " /etc/iptables.d/$TABLE/_BEGIN ; then
+				if ! grep -q "^:$CHAIN " /etc/fwtree.d/$TABLE/_BEGIN ; then
 					echo ":$CHAIN - [0:0]"
 				fi
 			fi
 		done
 		echo
 		RULE_COUNTER=0
-		for CHAIN in /etc/iptables.d/$TABLE/* ; do
+		for CHAIN in /etc/fwtree.d/$TABLE/* ; do
 			CHAIN=`basename $CHAIN`
 			# Skip special chains that start with underscore (such as _GLOBAL)
 			if [ ${CHAIN:0:1} = '_' ] ; then 
@@ -31,7 +31,7 @@ for TABLE in /etc/iptables.d/* ; do
 			echo "#####################################################################################"
 			printf '#%84s\n' "$TABLE.$CHAIN"
 			echo
-			for RULE in /etc/iptables.d/$TABLE/$CHAIN/*.rule ; do
+			for RULE in /etc/fwtree.d/$TABLE/$CHAIN/*.rule ; do
 				#BASERULE=$TABLE/$CHAIN/`basename $RULE`
 				RULE_COUNTER=$(( $RULE_COUNTER + 1 ))
 				if [ -f $RULE ] ; then

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#STATE_DIR='/var/lib/iptables.d'
 STATE_DIR='/etc/ipset.d'
 mkdir -p $STATE_DIR
 
