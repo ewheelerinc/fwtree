@@ -1,8 +1,13 @@
-# TCP flag validation
+# Sometimes hosts send RST even after the connection is torn down
+# which causes ctstate to be invalid, so we don't care about RST
+# because it creates too much noise in the logs.
+-p tcp --tcp-flags ALL RST,URG             -j RETURN
+-p tcp --tcp-flags ALL RST                 -j RETURN
 -m conntrack --ctstate INVALID             -j VALIDATE_TCP_DROP
+
+# TCP flag validation
 -p tcp --tcp-flags ACK,FIN FIN             -j VALIDATE_TCP_DROP
 -p tcp --tcp-flags ACK,PSH PSH             -j VALIDATE_TCP_DROP
--p tcp --tcp-flags ACK,URG URG             -j VALIDATE_TCP_DROP
 -p tcp --tcp-flags FIN,RST FIN,RST         -j VALIDATE_TCP_DROP
 -p tcp --tcp-flags SYN,FIN SYN,FIN         -j VALIDATE_TCP_DROP
 -p tcp --tcp-flags SYN,RST SYN,RST         -j VALIDATE_TCP_DROP

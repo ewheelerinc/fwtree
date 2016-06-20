@@ -1,0 +1,10 @@
+/var/log/iptables {
+    missingok
+    compress
+    copytruncate
+    daily
+    rotate 5
+    minsize 2048
+    maxsize 104857600
+    notifempty
+}
