@@ -1,0 +1,19 @@
+#!/bin/bash
+
+CACHE=/var/tmp/ipset-repository-whitelist.cache
+
+releasever=$(python -c 'import yum; yb = yum.YumBase(); print(yb.conf.yumvar["releasever"])' |tail -n1)
+basearch=$(uname -m)
+
+MIRRORS=$(grep -h ^mirrorlist /etc/yum.repos.d/*.repo |sed 's/mirrorlist=//' |sed "s/\$releasever/$releasever/g" |sed "s/\$basearch/$basearch/g")
+BASEURLS=$(grep -h ^baseurl=http /etc/yum.repos.d/*.repo |sed 's/baseurl=//')
+
+echo -e "$MIRRORS\n$BASEURLS" |cut -d / -f3 |cut -f2 -d @ |sort -u
+
+if ! [ -e $CACHE ] || [ "$(stat -c %Y $CACHE)" -lt "$(($(date +%s) - 3600))" ]; then
+	for i in $MIRRORS; do
+		wget -q -O - "$i" |egrep "https?://" |cut -d / -f3 |grep .
+	done |sort -u > $CACHE
+fi
+
+cat "$CACHE"
