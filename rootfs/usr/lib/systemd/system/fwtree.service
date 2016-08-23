@@ -4,6 +4,8 @@ Description=Tree-driven firewall
 Before=network.target
 Before=libvirtd.service
 
+After=firewalld.service
+
 Conflicts=iptables.service ip6tables.service ebtables.service firewalld.service
 
 [Install]
