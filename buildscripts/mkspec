@@ -9,6 +9,9 @@ echo 'Group: Application'
 echo 'License: Restricted'
 echo 'Prefix: /'
 echo 'BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)'
+if [ "$DIST" = 'el7' ]; then
+echo 'BuildRequires: systemd-units'
+fi
 echo 'Requires: python'
 echo 'Requires: ipset'
 echo 'Requires: aggregate'
@@ -32,6 +35,9 @@ echo '%clean'
 echo 'rm -fr $RPM_BUILD_ROOT'
 echo ''
 echo '%post'
+if [ "$DIST" = 'el7' ]; then
+echo 'systemctl daemon-reload'
+fi
 # Skip the post install if /etc/fwtree.d is populated
 echo '[ "$(ls -A /etc/fwtree.d/)" ] && exit'
 # Convert from iptables.d if it exists
@@ -116,5 +122,5 @@ echo '/etc/rsyslog.d/20-fwtree.conf'
 echo '/etc/logrotate.d/fwtree'
 echo '/usr/share/fwtree'
 if [ "$DIST" = 'el7' ]; then
-echo '/usr/lib/systemd/system/fwtree.service'
+echo '%{_unitdir}/fwtree.service'
 fi
