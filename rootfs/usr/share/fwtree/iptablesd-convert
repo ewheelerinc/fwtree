@@ -14,7 +14,7 @@ mkdir -p $NEW
 
 find -type d -exec mkdir -p $NEW/{} \;
 find * -type f -! -name '_*' -exec cp -a {} $NEW/{}.rule \;
-mv $NEW/COMMENT.{rule,old}
+rm $NEW/COMMENT.rule
 
 find -type l | while read a; do
 	LINK=$(readlink "$a")
@@ -39,5 +39,17 @@ else
 	echo "None found."
 fi
 
+
 echo
-echo "Once you have tested that everything is working, remember to rename or delete $OLD."
+echo "Once you have tested that everything is working, remember to rename or delete the following:"
+echo
+echo "  $OLD"
+echo "  $NEW/*/_GLOBAL.old"
+
+for i in /usr/local/bin/{fwtree,fwtree-parser,fw-update-blacklists,ipset-helper}; do
+	if [ -x "$i" ]; then
+		echo "  $i"
+		chmod -x $i
+	fi
+done
+echo
