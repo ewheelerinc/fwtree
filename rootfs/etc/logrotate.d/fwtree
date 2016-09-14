@@ -2,8 +2,8 @@
     missingok
     compress
     copytruncate
-    daily
-    rotate 5
+    weekly
+    rotate 52
     minsize 2048
     maxsize 104857600
     notifempty
