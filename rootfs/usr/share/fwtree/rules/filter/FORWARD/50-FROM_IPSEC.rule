@@ -1,0 +1,1 @@
+-m mark --mark 50 -j FROM_IPSEC
