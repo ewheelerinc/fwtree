@@ -4,12 +4,12 @@ DIST=$1
 
 if [ -z "$DIST" ]; then
 	echo "Usage: `basename $0` [DIST]"
-	echo "  Current supported distributions: el7"
+	echo "  Current supported distributions: el6 el7"
 	exit 1
 fi
 
-if [ "$DIST" != 'el7' ]; then
-	echo "Currently only el7 is supported."
+if [ "$DIST" != 'el6' ] || [ "$DIST" != 'el7' ]; then
+	echo "Currently only el6 and el7 is supported."
 	exit 1
 fi
 
@@ -18,6 +18,10 @@ TAR_PATH="/$FWTREE_PATH/tmp/"
 
 mkdir $TAR_PATH
 cp -a $FWTREE_PATH/rootfs/* $TAR_PATH/
+
+if [ -d "$FWTREE_PATH/rootfs-$DIST" ]; then
+	cp -a $FWTREE_PATH/rootfs-$DIST/* $TAR_PATH/
+fi
 
 SUBRELEASE=".$DIST"
 VERSION=$(cat /$FWTREE_PATH/.version)

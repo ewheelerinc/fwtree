@@ -125,4 +125,6 @@ echo '/etc/logrotate.d/fwtree'
 echo '/usr/share/fwtree'
 if [ "$DIST" = 'el7' ]; then
 echo '%{_unitdir}/fwtree.service'
+else
+echo '/etc/init.d/fwtree'
 fi
