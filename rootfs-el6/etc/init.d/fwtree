@@ -26,10 +26,12 @@ stop() {
 	iptables-restore < /usr/share/fwtree/fwtree-stop.ruleset
 }
 
-if [ -z "$1" ]; then
-	echo "Usage: $0 (start|stop|reload|restart)"
-	exit 0
-fi
+usage() {
+	if [ -z "$1" ]; then
+		echo "Usage: $0 (start|stop|reload|restart)"
+		exit 0
+	fi
+}
 
 LOCK=/var/lock/subsys/fwtree
 
@@ -43,13 +45,13 @@ case "$1" in
 	;;
 	restart)
 		stop ; start
+	;;
 	stop)
 		stop
 		rm $LOCK
 	;;
 	*)
-		echo 1>&2 "Unsupported option $1"
-		exit 1
+		usage
 	;;
 esac
 
