@@ -8,8 +8,8 @@ if [ -z "$DIST" ]; then
 	exit 1
 fi
 
-if [ "$DIST" != 'el6' ] || [ "$DIST" != 'el7' ]; then
-	echo "Currently only el6 and el7 is supported."
+if [ "$DIST" != 'el6' ] && [ "$DIST" != 'el7' ]; then
+	echo "Currently only el6 and el7 are supported."
 	exit 1
 fi
 
