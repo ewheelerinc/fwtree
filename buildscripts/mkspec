@@ -12,6 +12,9 @@ echo 'BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)'
 if [ "$DIST" = 'el7' ]; then
 echo 'BuildRequires: systemd-units'
 fi
+if [ "$DIST" = 'el6' ]; then
+echo 'Requires: chkconfig'
+fi
 echo 'Requires: python'
 echo 'Requires: ipset'
 echo 'Requires: aggregate'
@@ -37,6 +40,9 @@ echo ''
 echo '%post'
 if [ "$DIST" = 'el7' ]; then
 echo 'systemctl daemon-reload'
+fi
+if [ "$DIST" = 'el6' ]; then
+echo 'chkconfig --add fwtree'
 fi
 # Skip the post install if /etc/fwtree.d is populated
 echo '[ "$(ls -A /etc/fwtree.d/)" ] && exit'
@@ -107,9 +113,6 @@ echo 'ln -s /etc/fwtree.d/mangle/_GLOBAL/10-tos-default.rule /etc/fwtree.d/mangl
 echo ''
 echo 'cp /etc/fwtree.d/filter/_GLOBAL/22-tcp-allow-ssh-throttled.rule /etc/fwtree.d/filter/INPUT/'
 echo 'chmod 600 /etc/fwtree.d/filter/INPUT/22-tcp-allow-ssh-throttled.rule'
-echo ''
-echo 'echo Run fwtree-update-blacklists to update blacklists'
-echo 'echo'
 echo ''
 echo '%files'
 echo '%defattr (-, root, root)'
