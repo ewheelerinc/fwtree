@@ -1,0 +1,4 @@
+-m owner --uid-owner root -m set --match-set apt-whitelist dst -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+-m owner --uid-owner root -m set --match-set apt-whitelist dst -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
+-m owner --uid-owner x=`grep ^_apt: /etc/passwd |cut -f1 -d :` -m set --match-set apt-whitelist dst -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+-m owner --uid-owner x=`grep ^_apt: /etc/passwd |cut -f1 -d :` -m set --match-set apt-whitelist dst -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT

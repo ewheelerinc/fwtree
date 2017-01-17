@@ -15,9 +15,9 @@ WantedBy=multi-user.target
 Type=oneshot
 RemainAfterExit=yes
 
-ExecStartPre=/usr/bin/sh -c 'ipset-helper -c'
-ExecStart=/usr/bin/sh -c 'fwtree | iptables-restore'
+ExecStartPre=/bin/sh -c 'ipset-helper -c'
+ExecStart=/bin/sh -c 'fwtree | iptables-restore'
 
-ExecReload=/usr/bin/sh -c 'ipset-helper -c ; fwtree | iptables-restore'
+ExecReload=/bin/sh -c 'ipset-helper -c ; fwtree | iptables-restore'
 
-ExecStop=/usr/bin/sh -c 'iptables-restore < /usr/share/fwtree/fwtree-stop.ruleset'
+ExecStop=/bin/sh -c 'iptables-restore < /usr/share/fwtree/fwtree-stop.ruleset'

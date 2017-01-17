@@ -1,0 +1,2 @@
+-m owner --uid-owner root -m set --match-set yum-whitelist dst -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+-m owner --uid-owner root -m set --match-set yum-whitelist dst -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
