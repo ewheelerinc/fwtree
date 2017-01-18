@@ -1,1 +1,5 @@
+# Destination Unreachable: Fragmentation Needed and Don't Fragment was Set
+-p icmp --icmp-type 3/4 -j ACCEPT
+
+# For now, allow all ICMP. For hardened environments this may need to be limited.
 -p icmp -m conntrack --ctstate NEW -j ACCEPT
