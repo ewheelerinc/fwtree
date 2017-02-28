@@ -1,0 +1,14 @@
+[Unit]
+Description=Network Interface Manager for %I
+After=network.target
+
+[Service]
+PrivateTmp=true
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/sbin/ifdown %i
+ExecStart=/usr/sbin/ifup %i
+ExecStop=/usr/sbin/ifdown %i
+
+[Install]
+WantedBy=multi-user.target
