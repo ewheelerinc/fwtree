@@ -1,1 +1,1 @@
--p icmp -m conntrack --ctstate NEW -j ACCEPT
+../_GLOBAL/07-icmp-allow.rule
