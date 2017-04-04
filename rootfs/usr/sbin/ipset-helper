@@ -37,7 +37,7 @@ add_hosts () {
         perl -lne 's/[#;].*//; 
                 ($host,@args) = split /\s+/;
                 $args = join(" ", @args);
-                if ($host =~ m!^[0-9./]+$!) {
+                if ($host =~ m!^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(/\d{1,2})?$!) {
                         print "-exist add '"$SETNAME"' $host $args"
                 } elsif ($host) {
                         @ips = split /\s+/, `host -tA "$host" | grep "has address" | cut -d" " -f4`;
