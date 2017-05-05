@@ -15,7 +15,7 @@ releasever=$(python -c 'import yum; yb = yum.YumBase(); print(yb.conf.yumvar["re
 basearch=$(uname -m)
 
 MIRRORS=$(grep -h ^mirrorlist /etc/yum.repos.d/*.repo |sed 's/mirrorlist=//' |sed "s/\$releasever/$releasever/g" |sed "s/\$basearch/$basearch/g")
-BASEURLS=$(grep -h ^baseurl=http /etc/yum.repos.d/*.repo |sed 's/baseurl=//')
+BASEURLS=$(grep -h "^baseurl *= *http" /etc/yum.repos.d/*.repo |sed 's/baseurl=//')
 
 echo -e "$MIRRORS\n$BASEURLS" |cut -d / -f3 |cut -f2 -d @ |sort -u
 
