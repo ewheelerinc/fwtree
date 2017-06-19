@@ -3,4 +3,4 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 MAILTO=root
 
 */5 *   * * * root ipset-helper
-07  */4 * * * root fwtree-update-blacklists
+#07  */4 * * * root fwtree-update-blacklists
