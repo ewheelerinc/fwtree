@@ -1,18 +1,13 @@
 # Firewall configuration written by eWheeler Inc dba Global Linux Security
 # The previous line is not just vanity, it enables vim syntax highlight, too ;)
-# 
-# Add this to syslog: kern.=debug     -/var/log/iptables
 
 # # Do not modify this file directly.   Create rules in /etc/fwtree.d/.
 # #
 # # To regenerate firewall rules, perform the following, depending on distribution:
-# # CentOS 6:
-# #  fwtree > /etc/sysconfig/iptables
+# # CentOS 6 and other SysV distributions:
+# # /etc/init.d/fwtree restart
 # #
-# # and then
-# #  /etc/init.d/iptables restart
-# #
-# # CentOS 7:
+# # CentOS 7 and other Systemd distributions:
 # #  systemctl restart fwtree.service
 # #
 # # Other Distributions:
