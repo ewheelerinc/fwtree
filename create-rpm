@@ -42,7 +42,7 @@ rm -f $FWTREE_PATH/$TARBALL
 
 RPMDIR='/root/rpmbuild/RPMS/noarch'
 # Need to transfer RPM to deb8-dev to create .deb packages
-RPM=$(ls -ltr $RPMDIR/fwtree-*.el7.noarch.rpm |tail -n1 |awk '{print $9}')
+RPM=$(ls -ltr $RPMDIR/fwtree-*.${DIST}.noarch.rpm |tail -n1 |awk '{print $9}')
 
 if [ -n "$RPM" ]; then
 	echo "Pushing $(basename $RPM) to deb8-dev and building deb packages."

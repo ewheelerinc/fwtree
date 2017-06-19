@@ -42,7 +42,7 @@ if [ "$DIST" = 'el7' ]; then
 echo 'systemctl daemon-reload'
 fi
 if [ "$DIST" = 'el6' ]; then
-echo 'chkconfig --add fwtree'
+echo '[ -x /sbin/chkconfig ] && chkconfig --add fwtree'
 fi
 # Skip the post install if /etc/fwtree.d is populated
 echo '[ "$(ls -A /etc/fwtree.d/)" ] && exit'
@@ -51,6 +51,13 @@ echo '[ -d /etc/iptables.d ] && /usr/share/fwtree/iptablesd-convert && exit'
 echo ''
 echo 'echo'
 echo 'echo "NOTICE: SSH (22/tcp) is the only inbound service enabled by default."'
+echo 'if [ -x /bin/systemctl ]; then'
+echo '	echo "To enable and start, run: systemctl enable fwtree; systemctl start fwtree"'
+echo 'elif [ -x /sbin/chkconfig ]; then'
+echo '	echo "To enable and start, run: chkconfig fwtree on; /etc/init.d/fwtree start"'
+echo 'elif [ -x /usr/sbin/sysv-rc-conf ]; then'
+echo '	echo "To enable and start, run: sysv-rc-conf fwtree on; /etc/init.d/fwtree start"'
+echo 'fi'
 echo 'echo'
 echo ''
 echo 'mkdir -p /etc/fwtree.d/{filter,nat,mangle}/{INPUT,OUTPUT}'
