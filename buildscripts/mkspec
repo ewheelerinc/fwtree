@@ -38,12 +38,8 @@ echo '%clean'
 echo 'rm -fr $RPM_BUILD_ROOT'
 echo ''
 echo '%post'
-if [ "$DIST" = 'el7' ]; then
-echo 'systemctl daemon-reload'
-fi
-if [ "$DIST" = 'el6' ]; then
+echo '[ -x /usr/bin/systemctl ] && systemctl daemon-reload'
 echo '[ -x /sbin/chkconfig ] && chkconfig --add fwtree'
-fi
 # Skip the post install if /etc/fwtree.d is populated
 echo '[ "$(ls -A /etc/fwtree.d/)" ] && exit'
 # Convert from iptables.d if it exists
