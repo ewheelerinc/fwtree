@@ -47,6 +47,7 @@ RPM=$(ls -ltr $RPMDIR/fwtree-*.${DIST}.noarch.rpm |tail -n1 |awk '{print $9}')
 if [ -n "$RPM" ]; then
 	echo "Pushing $(basename $RPM) to deb8-dev and building deb packages."
 	scp $RPM deb8-dev.ewi:/usr/src/fwtree-git/
+	ssh deb8-dev.ewi "cd /usr/src/fwtree-git && ./build $(basename $RPM)"
 fi
 
 exit 0
